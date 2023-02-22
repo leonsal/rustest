@@ -1,5 +1,4 @@
 fn main() {
-
     // Creates builder for glfw library
     let mut buildc = cc::Build::new();
     let src_dir = "src/".to_string();
@@ -15,7 +14,7 @@ fn main() {
     buildc.file(src_dir.clone() + "glfw/src/osmesa_context.c");
 
     // Files to be compiled for Linux
-    #[cfg(target_os="linux")]
+    #[cfg(target_os = "linux")]
     {
         buildc.file(src_dir.clone() + "glfw/src/linux_joystick.c");
         buildc.file(src_dir.clone() + "glfw/src/posix_time.c");
@@ -25,8 +24,9 @@ fn main() {
     }
 
     // Files to be compiled for Linux && X11
-    #[cfg(target_os="linux")]
+    #[cfg(target_os = "linux")]
     {
+        //#cgo linux,!wayland LDFLAGS: -lX11 -lXrandr -lXxf86vm -lXi -lXcursor -lm -lXinerama -ldl -lrt
         buildc.define("_GLFW_X11", None);
         buildc.file(src_dir.clone() + "glfw/src/x11_window.c");
         buildc.file(src_dir.clone() + "glfw/src/x11_init.c");
@@ -35,7 +35,7 @@ fn main() {
     }
 
     // Files to be compiled for Linux && OpenGL
-    #[cfg(target_os="linux")]
+    #[cfg(target_os = "linux")]
     {
         buildc.include(src_dir.clone() + "gl3w/include");
         buildc.file(src_dir.clone() + "gb/glfw_opengl.c");
@@ -43,11 +43,19 @@ fn main() {
     }
 
     // Files to be compiled for windows
-    #[cfg(target_os="windows")]
-    {
-    }
+    #[cfg(target_os = "windows")]
+    {}
 
     // Builds static lib
-    buildc.compile("glfw");
+    buildc.compile("gux");
+    link_lib("X11");
+    link_lib("Xrandr");
+    link_lib("Xi");
+    link_lib("Xinerama");
+}
+
+fn link_lib(name: &str) {
+
+    println!("cargo:rustc-link-lib={name}");
 }
 
