@@ -88,6 +88,7 @@ pub struct DrawCmd {
 }
 
 #[repr(C)]
+#[derive(Copy, Clone)]
 pub struct DrawList {
     pub buf_cmd:    *mut DrawCmd,
     pub cmd_count:  u32,
@@ -118,14 +119,14 @@ extern "C" {
         pcfg: &Config,
     ) -> &mut Window;
     fn gb_window_destroy(win: *mut Window);
-    fn gb_window_start_frame(win: *mut Window, params: &FrameParams) -> FrameInfo;
-    fn gb_window_render_frame(win: *mut Window, dl: &DrawList);
+    fn gb_window_start_frame(win: *mut Window, params: &FrameParams) -> &FrameInfo;
+    fn gb_window_render_frame(win: *mut Window, dl: DrawList);
     fn gb_set_cursor(win: *mut Window, cursor: Cursor);
     fn gb_create_texture(win: *mut Window, width: c_int, height: c_int, data: *const RGBA) ->Texid;
     fn gb_delete_texture(win: *mut Window, texid: Texid);
 }
 
-pub fn create_window(title: String, width: i32, height: i32, cfg: &Config) -> &mut Window {
+pub fn create_window(title: String, width: i32, height: i32, cfg: &Config) -> *mut Window {
 
     unsafe {
         let ctitle = CString::new(title).expect("CString::new failed");
@@ -133,21 +134,21 @@ pub fn create_window(title: String, width: i32, height: i32, cfg: &Config) -> &m
     }
 }
 
-pub fn window_destroy(win: &mut Window) {
+pub fn window_destroy(win: *mut Window) {
 
     unsafe {
         gb_window_destroy(win);
     }
 }
 
-pub fn window_start_frame(win: &mut Window, params: &FrameParams) -> FrameInfo {
+pub fn window_start_frame(win: *mut Window, params: &FrameParams) -> &FrameInfo {
 
     unsafe {
         gb_window_start_frame(win, params)
     }
 }
 
-pub fn window_render_frame(win: &mut Window, dl: &DrawList) {
+pub fn window_render_frame(win: *mut Window, dl: DrawList) {
 
     unsafe {
         gb_window_render_frame(win, dl);
