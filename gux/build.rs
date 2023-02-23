@@ -1,6 +1,7 @@
 fn main() {
     // Creates builder for gux library
     let mut buildc = cc::Build::new();
+    buildc.flag_if_supported("-O2");
     buildc.flag_if_supported("-Wno-unused-parameter");
     buildc.flag_if_supported("-Wno-missing-field-initializers");
     buildc.flag_if_supported("-Wno-sign-compare");
