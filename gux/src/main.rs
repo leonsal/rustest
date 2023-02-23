@@ -2,6 +2,8 @@ pub mod gb;
 
 fn main() {
     println!("GUX");
+
+    // Window configuration
     let cfg = gb::Config {
         debug_print_cmds: false,
         unlimited_rate: false,
@@ -11,20 +13,15 @@ fn main() {
         },
     };
 
+    // Creates application native window
     let win = gb::create_window("Gux".to_string(), 1000, 800, &cfg);
-    println!("create_window():{:p}", win);
 
-
-	// // Creates image with one white opaque pixel
-	// var rect [1]RGBA
-	// rect[0] = MakeColor(255, 255, 255, 255)
-	//
-	// // Creates and transfer 1 pixel opaque white texture needed for all commands
-	// texId := win.CreateTexture(1, 1, &rect[0])
+	// Creates texture with 1 opaque white pixel
     let pixel = gb::make_color(255,255,255,255);
     let texid = gb::create_texture(win, 1, 1, &pixel);
     println!("texid:{texid}");
 
+    // Initial frame parameters
     let fparams = gb::FrameParams {
         ev_timeout: 0.0,
         clear_color: gb::Vec4 {
