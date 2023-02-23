@@ -1,4 +1,6 @@
+
 fn main() {
+
     // Creates builder for gux library
     let mut buildc = cc::Build::new();
     buildc.flag_if_supported("-O2");
@@ -44,8 +46,15 @@ fn main() {
         libs.push("Xinerama".to_string());
     }
 
-    // GUX files for OpenGL
-    #[cfg(target_os = "linux")]
+    // Gux files for vulkan
+    #[cfg(feature = "vulkan")]
+    {
+        buildc.file(src_dir.clone() + "gb/volk.c");
+        buildc.file(src_dir.clone() + "gb/glfw_vulkan.c");
+    }
+
+    // Gux files for opengl (default)
+    #[cfg(not(feature = "vulkan"))]
     {
         buildc.include(src_dir.clone() + "gl3w/include");
         buildc.file(src_dir.clone() + "gb/glfw_opengl.c");

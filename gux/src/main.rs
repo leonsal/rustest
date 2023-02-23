@@ -7,7 +7,7 @@ fn main() {
         unlimited_rate: false,
         opengl: gb::ConfigOpenGL { es: false },
         vulkan: gb::ConfigVulkan {
-            validation_layer: false,
+            validation_layer: true,
         },
     };
 
