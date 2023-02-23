@@ -1,7 +1,6 @@
 pub mod gb;
 
 fn main() {
-    println!("GUX");
 
     // Window configuration
     let cfg = gb::Config {
@@ -89,6 +88,7 @@ fn main() {
     draw_list.add_list(&draw_list1);
     draw_list.add_list(&draw_list2);
 
+    // Render loop
     loop {
         let frame_info = gb::window_start_frame(win, &fparams);
         if frame_info.win_close != 0 {
@@ -100,6 +100,8 @@ fn main() {
 
         gb::window_render_frame(win, &draw_list);
     }
+
+    // Clean up
 	gb::delete_texture(win, texid);
     gb::window_destroy(win);
 }
