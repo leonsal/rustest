@@ -1,9 +1,14 @@
 fn main() {
-    // Creates builder for glfw library
+    // Creates builder for gux library
     let mut buildc = cc::Build::new();
-    let src_dir = "src/".to_string();
+    buildc.flag_if_supported("-Wno-unused-parameter");
+    buildc.flag_if_supported("-Wno-missing-field-initializers");
+    buildc.flag_if_supported("-Wno-sign-compare");
 
-    // Common files
+    let src_dir = "src/".to_string();
+    let mut libs: Vec<String> = Vec::new();
+
+    // GLFW Common files
     buildc.include(src_dir.clone() + "glfw/include");
     buildc.file(src_dir.clone() + "glfw/src/context.c");
     buildc.file(src_dir.clone() + "glfw/src/init.c");
@@ -13,7 +18,7 @@ fn main() {
     buildc.file(src_dir.clone() + "glfw/src/window.c");
     buildc.file(src_dir.clone() + "glfw/src/osmesa_context.c");
 
-    // Files to be compiled for Linux
+    // GLFW files for Linux
     #[cfg(target_os = "linux")]
     {
         buildc.file(src_dir.clone() + "glfw/src/linux_joystick.c");
@@ -23,7 +28,7 @@ fn main() {
         buildc.file(src_dir.clone() + "glfw/src/egl_context.c");
     }
 
-    // Files to be compiled for Linux && X11
+    // GLFW files for Linux && X11
     #[cfg(target_os = "linux")]
     {
         //#cgo linux,!wayland LDFLAGS: -lX11 -lXrandr -lXxf86vm -lXi -lXcursor -lm -lXinerama -ldl -lrt
@@ -32,9 +37,13 @@ fn main() {
         buildc.file(src_dir.clone() + "glfw/src/x11_init.c");
         buildc.file(src_dir.clone() + "glfw/src/x11_monitor.c");
         buildc.file(src_dir.clone() + "glfw/src/glx_context.c");
+        libs.push("X11".to_string());
+        libs.push("Xrandr".to_string());
+        libs.push("Xi".to_string());
+        libs.push("Xinerama".to_string());
     }
 
-    // Files to be compiled for Linux && OpenGL
+    // GUX files for OpenGL
     #[cfg(target_os = "linux")]
     {
         buildc.include(src_dir.clone() + "gl3w/include");
@@ -46,12 +55,11 @@ fn main() {
     #[cfg(target_os = "windows")]
     {}
 
-    // Builds static lib
+    // Compile and generates library and AFTER requests additional external libraries to be linked.
     buildc.compile("gux");
-    link_lib("X11");
-    link_lib("Xrandr");
-    link_lib("Xi");
-    link_lib("Xinerama");
+    for l in &libs {
+        link_lib(l);
+    }
 }
 
 fn link_lib(name: &str) {
