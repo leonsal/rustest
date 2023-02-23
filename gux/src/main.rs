@@ -100,5 +100,6 @@ fn main() {
 
         gb::window_render_frame(win, &draw_list);
     }
+	gb::delete_texture(win, texid);
     gb::window_destroy(win);
 }
