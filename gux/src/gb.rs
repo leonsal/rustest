@@ -134,7 +134,7 @@ impl DrawList {
         }
     }
 
-    //pub fn new_cmd(&self, idx_count: u32, vtx_count: u32) -> (DrawCmd, &[u32], &[Vertex]) {
+    /// Reserves space in the DrawList and returns new DrawCmd and slices for indices and vertices.
     pub fn new_cmd<'a>(&'a mut self, idx_count: u32, vtx_count: u32) -> (&mut DrawCmd, &mut[u32], &mut[Vertex]) {
 
         // Reserve space for indices
@@ -163,6 +163,7 @@ impl DrawList {
          )
     }
 
+    /// Appends the src DrawList to this one
     pub fn add_list(&mut self, src: &DrawList) {
 
         // Append indices
@@ -181,32 +182,9 @@ impl DrawList {
             self.buf_cmd.push(cmd);
         }
     }
-
-
-// // AddList appends the specified DrawList to this one.
-// // The added DrawList is not modified.
-// func (dl *DrawList) AddList(src *DrawList) {
-//
-// 	// Append vertices
-// 	vtxOffset := len(dl.bufVtx)
-// 	dl.bufVtx = append(dl.bufVtx, src.bufVtx...)
-//
-// 	// Append indices
-// 	idxOffset := len(dl.bufIdx)
-// 	dl.bufIdx = append(dl.bufIdx, src.bufIdx...)
-//
-// 	// Append commands adjusting offsets
-// 	for i := 0; i < len(src.bufCmd); i++ {
-// 		cmd := src.bufCmd[i]
-// 		cmd.idxOffset += uint32(idxOffset)
-// 		cmd.vtxOffset += uint32(vtxOffset)
-// 		dl.bufCmd = append(dl.bufCmd, cmd)
-// 	}
-// }
-
 }
 
-
+// C bindigns
 extern "C" {
     fn gb_create_window(
         title: *const c_char,
