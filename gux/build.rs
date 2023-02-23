@@ -55,7 +55,5 @@ fn main() {
 }
 
 fn link_lib(name: &str) {
-
     println!("cargo:rustc-link-lib={name}");
 }
-

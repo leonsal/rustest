@@ -1,6 +1,6 @@
 use libc::c_int;
-use std::os::raw::c_char;
 use std::ffi::CString;
+use std::os::raw::c_char;
 
 #[repr(C)]
 pub struct Vec2 {
@@ -57,13 +57,13 @@ pub struct Event {
 
 #[repr(C)]
 pub struct FrameInfo {
-    pub win_close:  u32,
-    pub win_size:   Vec2,
-    pub fb_size:    Vec2,
-    pub fb_scale:   Vec2,
-    pub ev_cap:     u32,
-    pub ev_count:   u32,
-    pub events:     *const Event,
+    pub win_close: u32,
+    pub win_size: Vec2,
+    pub fb_size: Vec2,
+    pub fb_scale: Vec2,
+    pub ev_cap: u32,
+    pub ev_count: u32,
+    pub events: *const Event,
 }
 
 type RGBA = u32;
@@ -71,9 +71,9 @@ type RGBA = u32;
 // Vertex info
 #[repr(C)]
 pub struct Vertex {
-    pub pos:    Vec2,
-    pub uv:     Vec2,
-    pub col:    RGBA,
+    pub pos: Vec2,
+    pub uv: Vec2,
+    pub col: RGBA,
 }
 
 type Texid = usize;
@@ -81,7 +81,7 @@ type Texid = usize;
 #[repr(C)]
 pub struct DrawCmd {
     pub clip_rect: Vec4,
-    pub texid:  Texid,
+    pub texid: Texid,
     pub idx_offset: u32,
     pub vtx_offset: u32,
     pub elem_count: u32,
@@ -90,12 +90,12 @@ pub struct DrawCmd {
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub struct DrawList {
-    pub buf_cmd:    *mut DrawCmd,
-    pub cmd_count:  u32,
-    pub buf_idx:    *mut u32,
-    pub idx_count:  u32,
-    pub buf_vtx:    *mut Vertex,
-    pub vtx_count:  u32,
+    pub buf_cmd: *mut DrawCmd,
+    pub cmd_count: u32,
+    pub buf_idx: *mut u32,
+    pub idx_count: u32,
+    pub buf_vtx: *mut Vertex,
+    pub vtx_count: u32,
 }
 
 // Cursor types
@@ -122,12 +122,12 @@ extern "C" {
     fn gb_window_start_frame(win: *mut Window, params: &FrameParams) -> &FrameInfo;
     fn gb_window_render_frame(win: *mut Window, dl: DrawList);
     fn gb_set_cursor(win: *mut Window, cursor: Cursor);
-    fn gb_create_texture(win: *mut Window, width: c_int, height: c_int, data: *const RGBA) ->Texid;
+    fn gb_create_texture(win: *mut Window, width: c_int, height: c_int, data: *const RGBA)
+        -> Texid;
     fn gb_delete_texture(win: *mut Window, texid: Texid);
 }
 
 pub fn create_window(title: String, width: i32, height: i32, cfg: &Config) -> *mut Window {
-
     unsafe {
         let ctitle = CString::new(title).expect("CString::new failed");
         gb_create_window(ctitle.as_ptr(), width, height, cfg)
@@ -135,23 +135,36 @@ pub fn create_window(title: String, width: i32, height: i32, cfg: &Config) -> *m
 }
 
 pub fn window_destroy(win: *mut Window) {
-
     unsafe {
         gb_window_destroy(win);
     }
 }
 
 pub fn window_start_frame(win: *mut Window, params: &FrameParams) -> &FrameInfo {
-
-    unsafe {
-        gb_window_start_frame(win, params)
-    }
+    unsafe { gb_window_start_frame(win, params) }
 }
 
 pub fn window_render_frame(win: *mut Window, dl: DrawList) {
-
     unsafe {
         gb_window_render_frame(win, dl);
+    }
+}
+
+pub fn window_set_cursor(win: *mut Window, cursor: Cursor) {
+    unsafe {
+        gb_set_cursor(win, cursor);
+    }
+}
+
+pub fn create_texture(win: *mut Window, width: i32, height: i32, data: &RGBA) -> Texid {
+    unsafe {
+        gb_create_texture(win, width, height, data)
+    }
+}
+
+pub fn delete_texture(win: *mut Window, texid: Texid) {
+    unsafe {
+        gb_delete_texture(win, texid);
     }
 }
 
