@@ -11,7 +11,7 @@ pub struct Vec2 {
 
 // Vector with 4 components
 #[repr(C)]
-#[derive(Clone,Default)]
+#[derive(Clone,Copy, Default)]
 pub struct Vec4 {
     pub x: f32,
     pub y: f32,
@@ -82,6 +82,7 @@ pub struct Vertex {
 type Texid = usize;
 
 #[repr(C)]
+#[derive(Clone,Copy)]
 pub struct DrawCmd {
     pub clip_rect: Vec4,
     pub texid: Texid,
@@ -161,6 +162,48 @@ impl DrawList {
          &mut self.buf_vtx[vtx_offset..vtx_offset + vtx_count as usize],
          )
     }
+
+    pub fn add_list(&mut self, src: &DrawList) {
+
+        // Append indices
+        let idx_offset = self.buf_idx.len();
+        self.buf_idx.extend_from_slice(&src.buf_idx);
+
+        // Append vertices
+        let vtx_offset = self.buf_vtx.len();
+        self.buf_vtx.extend_from_slice(&src.buf_vtx);
+
+        // Append commands adjusting offset
+        for c in &src.buf_cmd {
+            let mut cmd = *c;
+            cmd.idx_offset += idx_offset as u32;
+            cmd.vtx_offset += vtx_offset as u32;
+            self.buf_cmd.push(cmd);
+        }
+    }
+
+
+// // AddList appends the specified DrawList to this one.
+// // The added DrawList is not modified.
+// func (dl *DrawList) AddList(src *DrawList) {
+//
+// 	// Append vertices
+// 	vtxOffset := len(dl.bufVtx)
+// 	dl.bufVtx = append(dl.bufVtx, src.bufVtx...)
+//
+// 	// Append indices
+// 	idxOffset := len(dl.bufIdx)
+// 	dl.bufIdx = append(dl.bufIdx, src.bufIdx...)
+//
+// 	// Append commands adjusting offsets
+// 	for i := 0; i < len(src.bufCmd); i++ {
+// 		cmd := src.bufCmd[i]
+// 		cmd.idxOffset += uint32(idxOffset)
+// 		cmd.vtxOffset += uint32(vtxOffset)
+// 		dl.bufCmd = append(dl.bufCmd, cmd)
+// 	}
+// }
+
 }
 
 
