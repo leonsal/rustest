@@ -5,7 +5,7 @@ pub struct Vec2f32 {
 }
 
 impl Vec2f32 {
-    const ZERO: Vec2f32 = Vec2f32 { x: 0., y: 0. };
+    //const ZERO: Vec2f32 = Vec2f32 { x: 0., y: 0. };
 
     pub fn new(x: f32, y: f32) -> Vec2f32 {
         Vec2f32 { x, y }
