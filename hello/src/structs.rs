@@ -1,4 +1,3 @@
-
 #[derive(Debug, Clone)]
 pub struct Vec2f32 {
     pub x: f32,
@@ -6,19 +5,17 @@ pub struct Vec2f32 {
 }
 
 impl Vec2f32 {
-
-    const ZERO: Vec2f32 = Vec2f32{x:0., y:0.};
+    const ZERO: Vec2f32 = Vec2f32 { x: 0., y: 0. };
 
     pub fn new(x: f32, y: f32) -> Vec2f32 {
-
-        Vec2f32{x, y}
+        Vec2f32 { x, y }
     }
 
     pub fn norm(&self) -> f32 {
         (self.x * self.x + self.y * self.y).sqrt()
     }
 
-    pub fn add_vec2(&mut self, other: &Vec2f32)  {
+    pub fn add_vec2(&mut self, other: &Vec2f32) {
         self.x += other.x;
         self.y += other.y;
     }
@@ -57,5 +54,3 @@ pub fn test1() {
 //
 //
 //}
-
-

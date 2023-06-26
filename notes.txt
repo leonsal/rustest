@@ -1,0 +1,122 @@
+Rust notes
+----------
+
+-   rustup manages rust installation and update
+-   Rust doest not include a linker.
+    It uses the one available in the system.
+    -   On Windows it depends on Visual Studio 2022
+
+-   rustfmt uses 4 spaces for each indentation level.
+-   The prelude is a set of standard library items that Rust
+    brings into the scope of every program.
+
+-   Cargo.lock keeps track of the dependencies of the project.
+-   cargo update, ignores Cargo.lock and downloads new versions of the
+    dependencies but respects Cargo.toml specifications.
+-   cargo doc --open builds documentation and opens it in the browser.
+
+-   Constants (all uppercase) can be declared in any scope,
+    including the global scope:
+    const SECONDS_IN_HOUR: u32 = 60 * 60;
+
+-   Unsigned integers: u8, u16, u32, u64, u128, usize (arch dependant)
+-   Signed integers:   i8, i16, i32, i64, i128, isize (arch dependant)
+-   In debug mode Rust panics on integer overflow.
+-   In release mode Rust "wrap around".
+-   Boolean: bool (true | false)
+-   Floating point: f32, f64.
+-   Rust 'char' type is 4 bytes in size and represents a Unicode Scalar Value.
+-   Tuples: let tup: (i32, f32, u8) = (500, 6.4, 1);
+    -   Access element by: tup.0, tup.1, tup.2 or
+        let (x, y, z) = tup;
+    -   Unit is the tuple without any values: ().
+        Represents an empty value or an empty return type.
+-   Arrays:
+        let aints = [1,2,3,4,5];
+        let words = ["ab", "cd", "xyz"];
+        let af: [f32;3] = [1.0,2.0.3.0];
+        let ones = [1, 3];  // 3 elements of value  = 1
+
+-   Functions
+    -   names use snake case convention
+        fn another_function() {}
+    -   fn five() -> i32 { 
+            5       // <- no semicolon
+        }
+    -   fn plus_one(x: i32) -> i32 {
+            x + 1   // <- no semicolon
+        }
+
+-   Control flow
+    -   if expression:
+            let a = 1;
+            leb b = 2;
+            let max = if a > b {a} else {b};
+    -   loop expression: 
+            let mut counter = 0;
+            let result = loop {
+                counter += 1;
+                if counter == 10 {
+                    break counter*2;
+                }
+            }
+    -   loop label is preceded by a single quote.
+    -   while {}
+    -   for loop
+        let a = [1,2,3,4,6];
+        for el in a {
+            println!("element:{el}");
+        }
+        using range:
+        for n in (1..10) {
+            println!("n:{}", n);
+        }
+
+
+-   String::new() creates a new dynamic string with UTF8 encoded text.
+    -   It does not allocate anything
+    -   It is simply a struct containing a Vec<u8>
+    -   It is an associated function, which is a function that's implemented
+        on a type.
+    -   String from a literal string:
+        let s = String::from("literal string");
+
+-   Ownership rules
+    -   Each value has an owner.
+    -   There can be only an owner at a time.
+    -   When the owner goes out of scope the value is dropped.
+
+    -   Copy trait can be set on types which are stored on the stack
+        variables that use it do not move, but rather are trivially copied.
+        It cannot be associated with a type which has implemented the Drop trait.
+    -   Passing a value to a function will move or copy, just as an assignment does.
+    -   Returning values from a function can also transfer ownership.
+    -   Rust has a feature for using a value without transferring ownership,
+        called references.
+    -   The &var syntax let us create a reference that refers to the value of 'var'
+        but does not own it. The act of creating a reference is called 'borrowing'.
+    -   References a are immutable by default. To allow to modify a borrowed value a
+        mutable reference is needed.
+    -   Mutable references have one big restriction: if you have a mutable reference to
+        a value, you can have NO other references to that value (immutable or not).
+
+    -   At any given time, you can have either one mutable reference or any number of
+        immutable references. 
+    -   References must always be valid.
+
+    -   Slices let you reference a contiguous sequence of elements in a collection rather
+        than the whole collection. A slice is a kind of reference, so it does not have
+        ownership.
+    -   A string slice is a reference to part of a string:
+        let s = String::from("hello world");
+        let hello = &s[0..5];
+        let world = &s[6..11];
+    -   The type for for string slices is: &str
+    -   The type for string literals is: &str
+        let s = "string literal"; // type of s is &str
+    -   When passing 'strings' to a function is better to use a string slice
+        because it allows to use the same function on both &string values and &str values:
+        fn use_string(s: &String)
+        fn use_string(s: &str)      <-- Better
+
+
