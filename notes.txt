@@ -14,6 +14,7 @@ Rust notes
 -   cargo update, ignores Cargo.lock and downloads new versions of the
     dependencies but respects Cargo.toml specifications.
 -   cargo doc --open builds documentation and opens it in the browser.
+-   'rustup component add rust-analyzer' was needed after 'rustup update
 
 -   Constants (all uppercase) can be declared in any scope,
     including the global scope:
