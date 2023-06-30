@@ -1,6 +1,8 @@
 
 fn main() {
 
+    println!("BUILD ----------------------------------");
+
     // Creates builder for c library
     let mut buildc = cc::Build::new();
     let srcdir = "src/cfiles/".to_string();
@@ -10,12 +12,6 @@ fn main() {
     {
         buildc.define("WAYLAND", None);
         buildc.file(srcdir.clone() + "foo.c");
-    }
-
-    // Files to be compiled for windows
-    #[cfg(target_os="windows")]
-    {
-        buildc.file(srcdir + "lixo.c");
     }
 
     // Builds static lib
